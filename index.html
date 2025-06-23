@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flashcard Generator</title>
+  <link rel="stylesheet" href="index.css">
+  <script type="importmap">
+{
+  "imports": {
+    "@google/genai": "https://esm.sh/@google/genai@^0.7.0",
+    "pdfjs-dist/build/pdf.min.js": "https://esm.sh/pdfjs-dist@4.0.379/build/pdf.min.js",
+    "pdfjs-dist/build/pdf.worker.min.js": "https://esm.sh/pdfjs-dist@4.0.379/build/pdf.worker.min.js",
+    "mammoth": "https://esm.sh/mammoth@1.7.0",
+    "pdfjs-dist/": "https://esm.sh/pdfjs-dist@^5.3.31/"
+  }
+}
+</script>
+  <!-- Add Google Fonts Link -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Google+Sans:wght@400;500&family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/index.css">
+</head>
+<body>
+  <div class="app-container">
+    <div class="main-content">
+      <h1 id="mainTitle">Flashcard Generator</h1>
+      <p id="mainDescription">
+        Enter a topic, paste text, or upload a document to generate flashcards using the Gemini API.
+      </p>
+      <div id="generationControls">
+        <textarea
+          id="topicInput"
+          placeholder="Enter topic (e.g., Ancient Rome) or 'Term: Definition' pairs (one per line)"
+          aria-label="Topic or terms for flashcards"
+        ></textarea>
+        <div class="input-group">
+          <label for="numFlashcardsInput">Number of Flashcards:</label>
+          <input type="number" id="numFlashcardsInput" value="10" min="1" max="500" aria-label="Desired number of flashcards" />
+        </div>
+         <div class="input-group">
+          <label for="numQuizQuestionsInput">Number of Quiz Questions (0 for all):</label>
+          <input type="number" id="numQuizQuestionsInput" value="0" min="0" aria-label="Desired number of quiz questions" />
+        </div>
+        <div class="controls-container">
+          <div class="input-group difficulty-toggle-group">
+            <input type="checkbox" id="escalateDifficultyCheckbox" />
+            <label for="escalateDifficultyCheckbox">Escalate Difficulty on Delete</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-upload-section">
+        <h2>Or Upload a Document</h2>
+        <div class="input-group">
+            <label for="fileUploadInput">Select file (PDF, DOCX):</label>
+            <input type="file" id="fileUploadInput" accept=".pdf,.docx,.pptx" aria-label="Upload document for flashcards">
+            <span id="fileNameDisplay" class="file-name-display">No file selected.</span>
+        </div>
+        <button id="generateFromFileButton" class="secondary-action-button">Generate from File</button>
+      </div>
+
+      <div class="manual-card-add-section">
+        <h2>Manually Add a Card</h2>
+        <div class="input-group">
+            <label for="manualTermInput">Term:</label>
+            <input type="text" id="manualTermInput" placeholder="Enter term for manual card" aria-label="Term for manual flashcard">
+        </div>
+        <div class="input-group">
+            <label for="manualDefinitionInput">Definition:</label>
+            <textarea id="manualDefinitionInput" placeholder="Enter definition for manual card" aria-label="Definition for manual flashcard" rows="3"></textarea>
+        </div>
+        <button id="addManualCardButton" class="secondary-action-button">Add Card Manually</button>
+      </div>
+
+      <div class="actions-container">
+        <button id="generateButton">Generate from Text Above</button>
+        <button id="saveDeckButton" disabled>Save Current Deck</button>
+        <button id="viewSavedDecksButton">View Saved Decks</button>
+        <button id="startQuizButton" disabled>Start Quiz</button>
+      </div>
+      <div id="errorMessage" class="error-message" aria-live="polite"></div>
+      <div id="flashcardsContainer" class="flashcards-container">
+        <!-- Flashcards will be generated here -->
+      </div>
+
+      <!-- Quiz Mode Container (initially hidden) -->
+      <div id="quizModeContainer" style="display: none;">
+        <h2 id="quizTitle">Quiz Time!</h2>
+        <div id="quizPreparationMessage" class="status-message" style="display: none;" aria-live="polite">Preparing your quiz...</div>
+        
+        <div id="quizQuestionArea" style="display: none;">
+          <div id="quizProgress" class="quiz-progress-indicator">Question X of Y | Score: Z</div>
+          <div id="quizTerm" class="quiz-term-display"></div>
+          <div id="quizOptions" class="quiz-options-grid">
+            <!-- Option buttons will be dynamically inserted here -->
+          </div>
+          <div id="quizFeedback" class="quiz-feedback-message" aria-live="polite"></div>
+        </div>
+
+        <div id="quizControls" class="quiz-controls-area" style="display: none;">
+          <button id="nextQuizQuestionButton" style="display: none;">Next Question</button>
+          <button id="finishQuizButton">Finish Quiz Now</button>
+        </div>
+
+        <div id="quizSummary" style="display: none;" class="quiz-summary-results">
+          <h3>Quiz Finished!</h3>
+          <p id="quizFinalScore"></p>
+          <div class="quiz-summary-actions">
+            <button id="retryQuizButton">Retry Quiz</button>
+            <button id="backToFlashcardsButton">Back to Flashcards</button>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <footer>
+      Powered by Gemini
+    </footer>
+  </div>
+
+  <!-- Modal for Saved Decks -->
+  <div id="savedDecksModal" class="modal-overlay" style="display: none;" aria-labelledby="savedDecksModalTitle" aria-modal="true" role="dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="savedDecksModalTitle">My Saved Decks</h2>
+        <button id="modalCloseButton" class="modal-close-button" aria-label="Close saved decks modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <ul id="savedDecksList">
+          <!-- Saved decks will be listed here -->
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal for Deck Name Input -->
+  <div id="deckNameModal" class="modal-overlay" style="display: none;" aria-labelledby="deckNameModalTitle" aria-modal="true" role="dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="deckNameModalTitle">Save Deck As</h2>
+        <button id="deckNameModalCloseButton" class="modal-close-button" aria-label="Close save deck modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="input-group">
+          <label for="deckNameInputModal">Deck Name:</label>
+          <input type="text" id="deckNameInputModal" placeholder="Enter a name for this deck">
+        </div>
+        <div class="modal-actions">
+          <button id="confirmSaveDeckButton" class="modal-button-primary">Save Deck</button>
+          <button id="cancelSaveDeckButtonModal" class="modal-button-secondary">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>

@@ -1,0 +1,779 @@
+:root {
+  --light-bg: #f8f9fa; /* Lighter grey for light mode */
+  --dark-bg: #202124;  /* Google dark grey */
+  --light-surface: #ffffff;
+  --dark-surface: #2d2e30; /* Slightly lighter dark surface */
+  --light-text-primary: #202124;
+  --dark-text-primary: #e8eaed; /* Google dark mode text */
+  --light-text-secondary: #5f6368;
+  --dark-text-secondary: #bdc1c6; /* Google dark mode secondary text */
+  --light-primary: #1a73e8; /* Google Blue */
+  --dark-primary: #8ab4f8; /* Lighter Google Blue for dark mode */
+  --light-primary-hover: #185abc;
+  --dark-primary-hover: #aecbfa;
+  --light-border: #dadce0;
+  --dark-border: #5f6368;
+  --light-error: #d93025;
+  --dark-error: #f28b82;
+  --light-success: #1e8e3e; /* Google Green for correct answers */
+  --dark-success: #81c995;
+  --light-card-bg: #e8f0fe; /* Light blue background for cards */
+  --dark-card-bg: #3c4043; /* Darker grey for cards */
+  --light-disabled-bg: #e0e0e0;
+  --dark-disabled-bg: #3c4043;
+  --light-disabled-text: #a0a0a0;
+  --dark-disabled-text: #7f8184;
+  --light-shadow-color-1: rgba(60, 64, 67, 0.15);
+  --dark-shadow-color-1: rgba(0, 0, 0, 0.3);
+  --light-shadow-color-2: rgba(60, 64, 67, 0.1);
+  --dark-shadow-color-2: rgba(0, 0, 0, 0.2);
+  --light-focus-shadow-color: rgba(26, 115, 232, 0.2);
+  --dark-focus-shadow-color: rgba(138, 180, 248, 0.3);
+  --light-button-focus-shadow-color: rgba(26, 115, 232, 0.3);
+  --dark-button-focus-shadow-color: rgba(138, 180, 248, 0.4);
+  --light-button-text: white;
+  --dark-button-text: var(--dark-bg); /* Use dark background for text on light blue */
+  --flashcard-width: 230px; /* Slightly wider */
+  --flashcard-height: 160px; /* Slightly taller */
+  --delete-button-color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  --delete-button-hover-color: light-dark(var(--light-error), var(--dark-error));
+  --delete-button-hover-bg: light-dark(rgba(217, 48, 37, 0.1), rgba(242, 139, 130, 0.15));
+  --light-secondary-button-bg: #e8eaed;
+  --dark-secondary-button-bg: #3c4043;
+  --light-secondary-button-text: var(--light-text-primary);
+  --dark-secondary-button-text: var(--dark-text-primary);
+  --light-secondary-button-hover-bg: #dadce0;
+  --dark-secondary-button-hover-bg: #5f6368;
+}
+
+body {
+  font-family: 'Google Sans', Roboto, Arial, sans-serif;
+  margin: 0;
+  background-color: light-dark(var(--light-bg), var(--dark-bg));
+  color: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Align to top */
+  min-height: 100vh;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.app-container { /* Renamed from .container to avoid conflict if user embeds this */
+  background-color: light-dark(var(--light-surface), var(--dark-surface));
+  padding: 30px 40px; /* Adjusted padding */
+  border-radius: 12px;
+  box-shadow: 0 1px 3px light-dark(var(--light-shadow-color-1), var(--dark-shadow-color-1)),
+              0 4px 8px light-dark(var(--light-shadow-color-2), var(--dark-shadow-color-2));
+  width: 100%; /* Take full width up to max-width */
+  max-width: 800px;
+  margin-top: 20px; /* Space from top */
+  margin-bottom: 20px; /* Space from bottom */
+  display: flex;
+  flex-direction: column;
+}
+
+.main-content {
+  text-align: center;
+  width: 100%;
+}
+
+h1 {
+  color: light-dark(var(--light-primary), var(--dark-primary));
+  margin-bottom: 15px;
+  font-size: 2.2em; /* Slightly larger */
+  font-weight: 500;
+}
+
+h2 { /* General h2 styling for section titles */
+  font-size: 1.5em;
+  color: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  margin-top: 30px;
+  margin-bottom: 15px;
+  text-align: left;
+  border-bottom: 1px solid light-dark(var(--light-border), var(--dark-border));
+  padding-bottom: 10px;
+}
+
+
+p {
+  margin-bottom: 25px;
+  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  line-height: 1.6;
+  font-size: 1.05em;
+}
+
+textarea,
+#manualDefinitionInput { /* Apply to general textareas and specific one */
+  width: 100%; /* Full width of parent */
+  padding: 15px;
+  margin-bottom: 20px; /* Adjusted margin */
+  border: 1px solid light-dark(var(--light-border), var(--dark-border));
+  border-radius: 8px;
+  font-size: 16px;
+  min-height: 100px; /* Reduced min-height */
+  background-color: light-dark(var(--light-bg), var(--dark-card-bg));
+  color: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  resize: vertical;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  box-sizing: border-box;
+}
+
+#manualDefinitionInput { /* Specific overrides if needed, e.g., for rows */
+  min-height: 60px; /* Shorter for definition if desired */
+}
+
+
+textarea:focus,
+#manualDefinitionInput:focus {
+  outline: none;
+  border-color: light-dark(var(--light-primary), var(--dark-primary));
+  box-shadow: 0 0 0 3px light-dark(var(--light-focus-shadow-color), var(--dark-focus-shadow-color));
+}
+
+.input-group {
+  margin-bottom: 25px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start; /* Align label and input to the left */
+  width: 100%; /* Take full width to align with textarea */
+  text-align: left;
+}
+
+.input-group label {
+  margin-bottom: 8px;
+  font-weight: 500;
+  font-size: 0.95em;
+  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+}
+
+.input-group input[type="number"],
+.input-group input[type="text"],
+.input-group input[type="file"] {
+  padding: 12px 15px;
+  border: 1px solid light-dark(var(--light-border), var(--dark-border));
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: light-dark(var(--light-bg), var(--dark-card-bg));
+  color: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  box-sizing: border-box;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.input-group input[type="number"] {
+   width: 120px; /* Fixed width for number input */
+}
+
+.input-group input[type="file"] {
+  width: 100%; /* Full width for file input */
+  padding: 10px; /* Adjust padding for file input */
+}
+
+.input-group input[type="file"]::file-selector-button {
+  background-color: light-dark(var(--light-primary), var(--dark-primary));
+  color: light-dark(var(--light-button-text), var(--dark-button-text));
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-right: 10px;
+  transition: background-color 0.2s ease;
+}
+.input-group input[type="file"]::file-selector-button:hover {
+  background-color: light-dark(var(--light-primary-hover), var(--dark-primary-hover));
+}
+
+
+/* Ensure quiz question number input also has a similar fixed width for consistency */
+#numQuizQuestionsInput {
+  width: 120px;
+}
+
+
+.input-group input[type="text"] { /* Includes #manualTermInput by specificity */
+   width: 100%; /* Full width for text input in modal and manual add */
+}
+
+
+.input-group input[type="number"]:focus,
+.input-group input[type="text"]:focus,
+.input-group input[type="file"]:focus {
+  outline: none;
+  border-color: light-dark(var(--light-primary), var(--dark-primary));
+  box-shadow: 0 0 0 3px light-dark(var(--light-focus-shadow-color), var(--dark-focus-shadow-color));
+}
+
+.controls-container {
+  display: flex;
+  justify-content: flex-start; /* Aligns items to the start */
+  align-items: center;
+  margin-bottom: 20px; /* Space before action buttons */
+  width: 100%;
+}
+
+.difficulty-toggle-group {
+  display: flex;
+  flex-direction: row; /* Align checkbox and label horizontally */
+  align-items: center;
+  gap: 8px; /* Space between checkbox and label */
+  margin-bottom: 0; /* Override default input-group margin */
+}
+
+.difficulty-toggle-group input[type="checkbox"] {
+  margin: 0; /* Remove default margins */
+  width: auto; /* Adjust width */
+  height: auto; /* Adjust height */
+  accent-color: light-dark(var(--light-primary), var(--dark-primary)); /* Color the checkbox */
+}
+
+.difficulty-toggle-group label {
+  margin-bottom: 0; /* Override default label margin */
+  font-weight: normal; /* Less emphasis than main labels */
+  font-size: 0.9em;
+  cursor: pointer;
+}
+
+.file-upload-section,
+.manual-card-add-section {
+  margin-top: 10px; /* Space above the section */
+  margin-bottom: 20px; /* Space below the section */
+  padding: 20px;
+  border: 1px dashed light-dark(var(--light-border), var(--dark-border));
+  border-radius: 8px;
+  background-color: light-dark(rgba(248,249,250,0.5), rgba(45,46,48,0.5)); /* Slightly different background */
+}
+
+.file-upload-section h2,
+.manual-card-add-section h2 {
+  margin-top: 0; /* Remove top margin for h2 inside this section */
+  margin-bottom: 20px;
+  font-size: 1.3em; /* Slightly smaller h2 for this section */
+  border-bottom: none; /* No border for this h2 */
+  padding-bottom: 0;
+}
+
+.file-upload-section .input-group,
+.manual-card-add-section .input-group {
+  margin-bottom: 15px; /* Adjust spacing */
+}
+
+.manual-card-add-section #addManualCardButton {
+  margin-top: 5px; /* Space above button if inputs are short */
+}
+
+.file-name-display {
+  display: block;
+  font-size: 0.9em;
+  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  margin-top: 8px;
+  font-style: italic;
+}
+
+
+.actions-container {
+  display: flex;
+  gap: 15px;
+  margin-top: 30px; /* Added more space above main action buttons */
+  margin-bottom: 20px;
+  flex-wrap: wrap; /* Allow buttons to wrap on smaller screens */
+  justify-content: center;
+}
+
+button {
+  background-color: light-dark(var(--light-primary), var(--dark-primary));
+  color: light-dark(var(--light-button-text), var(--dark-button-text));
+  padding: 12px 24px; /* Slightly adjusted padding */
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 15px; /* Slightly smaller font for more buttons */
+  font-weight: 500;
+  transition: background-color 0.3s ease, box-shadow 0.2s ease, color 0.3s ease;
+  box-shadow: 0 1px 2px light-dark(var(--light-shadow-color-2), var(--dark-shadow-color-2));
+  width: auto; /* Adjust width based on content */
+  display: inline-block; /* Align with text flow if needed */
+}
+
+button:hover {
+  background-color: light-dark(var(--light-primary-hover), var(--dark-primary-hover));
+  box-shadow: 0 2px 4px light-dark(var(--light-shadow-color-1), var(--dark-shadow-color-1));
+}
+
+button:focus {
+  outline: none;
+  box-shadow: 0 0 0 4px light-dark(var(--light-button-focus-shadow-color), var(--dark-button-focus-shadow-color));
+}
+
+button:disabled {
+  background-color: light-dark(var(--light-disabled-bg), var(--dark-disabled-bg));
+  color: light-dark(var(--light-disabled-text), var(--dark-disabled-text));
+  cursor: not-allowed;
+  box-shadow: none;
+}
+
+/* Secondary Action Button Style (e.g., Generate from File, Save Deck, View Decks, Start Quiz) */
+.secondary-action-button,
+#saveDeckButton,
+#viewSavedDecksButton,
+#startQuizButton,
+#addManualCardButton { /* Added manual add button here */
+  background-color: light-dark(var(--light-secondary-button-bg), var(--dark-secondary-button-bg));
+  color: light-dark(var(--light-secondary-button-text), var(--dark-secondary-button-text));
+}
+
+.secondary-action-button:hover:not(:disabled),
+#saveDeckButton:hover:not(:disabled),
+#viewSavedDecksButton:hover:not(:disabled),
+#startQuizButton:hover:not(:disabled),
+#addManualCardButton:hover:not(:disabled) {
+  background-color: light-dark(var(--light-secondary-button-hover-bg), var(--dark-secondary-button-hover-bg));
+}
+
+.secondary-action-button:disabled,
+#saveDeckButton:disabled,
+#startQuizButton:disabled,
+#addManualCardButton:disabled {
+  background-color: light-dark(var(--light-disabled-bg), var(--dark-disabled-bg));
+  color: light-dark(var(--light-disabled-text), var(--dark-disabled-text));
+}
+
+
+.error-message, .status-message {
+  color: light-dark(var(--light-text-secondary), var(--dark-text-primary)); /* General info color */
+  margin-top: 25px;
+  font-weight: 500;
+  min-height: 1.5em; /* Ensure space for message */
+  line-height: 1.4;
+}
+
+/* Specific error styling if needed, can be applied via JS */
+.error-message.is-error {
+  color: light-dark(var(--light-error), var(--dark-error));
+}
+
+.flashcards-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px; /* Slightly reduced gap */
+  margin-top: 35px;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.flashcard {
+  background-color: transparent;
+  width: var(--flashcard-width);
+  height: var(--flashcard-height);
+  border: none;
+  border-radius: 10px;
+  perspective: 1000px;
+  box-shadow: none;
+  position: relative; /* For positioning delete button */
+}
+
+.flashcard-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  text-align: center;
+  transition: transform 0.7s cubic-bezier(0.25, 0.1, 0.25, 1); /* Smoother flip */
+  transform-style: preserve-3d;
+  box-shadow: 0 2px 5px light-dark(var(--light-shadow-color-1), var(--dark-shadow-color-1));
+  border-radius: 10px;
+  cursor: pointer; /* Cursor for flipping on the inner content */
+}
+
+.flashcard.flipped .flashcard-inner {
+  transform: rotateY(180deg);
+}
+
+.flashcard-front,
+.flashcard-back {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  -webkit-backface-visibility: hidden;
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 15px; /* Adjusted padding */
+  box-sizing: border-box;
+  border-radius: 10px;
+  border: 1px solid light-dark(var(--light-border), var(--dark-border));
+  background-color: light-dark(var(--light-card-bg), var(--dark-card-bg));
+  overflow-wrap: break-word; /* Prevent long words from overflowing */
+  word-wrap: break-word;
+}
+
+.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+.flashcard:hover .flashcard-inner {
+  box-shadow: 0 5px 12px light-dark(var(--light-shadow-color-1), var(--dark-shadow-color-1)); /* Enhanced hover shadow */
+  transform: translateY(-3px); /* Slight lift on hover */
+}
+.flashcard.flipped:hover .flashcard-inner { /* Keep transform when flipped and hovered */
+  transform: rotateY(180deg) translateY(-3px);
+}
+
+
+.flashcard:hover .flashcard-front,
+.flashcard:hover .flashcard-back {
+   border-color: light-dark(var(--light-primary), var(--dark-primary));
+}
+
+.term {
+  font-size: 1.2em; /* Adjusted size */
+  font-weight: 500;
+  color: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  margin-bottom: 5px; /* Space between term and potential scrollbar if text is long */
+  padding: 0 5px; /* Padding for term text */
+}
+
+.definition {
+  font-size: 0.95em; /* Adjusted size */
+  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  line-height: 1.5; /* Adjust line height */
+  padding: 0 5px; /* Padding for definition text */
+}
+
+.delete-button {
+  position: absolute;
+  top: -5px; /* Slightly offset for better visual */
+  right: -5px; /* Slightly offset */
+  background-color: light-dark(var(--light-surface), var(--dark-surface));
+  color: var(--delete-button-color);
+  border: 1px solid light-dark(var(--light-border), var(--dark-border));
+  border-radius: 50%; /* Circular button */
+  width: 28px;
+  height: 28px;
+  font-size: 20px; /* Make "×" larger */
+  line-height: 26px; /* Center "×" */
+  text-align: center;
+  padding: 0;
+  cursor: pointer;
+  z-index: 10; /* Ensure it's above card content */
+  box-shadow: 0 1px 2px light-dark(rgba(0,0,0,0.1), rgba(0,0,0,0.3));
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.delete-button:hover,
+.delete-button:focus {
+  background-color: var(--delete-button-hover-bg);
+  color: var(--delete-button-hover-color);
+  border-color: var(--delete-button-hover-color); /* Optional: change border color too */
+  transform: scale(1.1);
+  box-shadow: 0 2px 4px light-dark(rgba(0,0,0,0.15), rgba(0,0,0,0.4));
+  outline: none;
+}
+
+
+footer {
+  margin-top: auto; /* Pushes footer to the bottom of app-container */
+  padding-top: 25px;
+  border-top: 1px solid light-dark(var(--light-border), var(--dark-border));
+  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  font-size: 0.9em;
+  text-align: center; /* Center footer text */
+  width: 100%; /* Ensure footer spans width */
+}
+
+/* Modal Styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.modal-content {
+  background-color: light-dark(var(--light-surface), var(--dark-surface));
+  padding: 25px 30px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  width: 100%;
+  max-width: 600px;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+#deckNameModal .modal-content { /* Specific max-width for deck name modal */
+  max-width: 450px;
+}
+
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid light-dark(var(--light-border), var(--dark-border));
+}
+
+.modal-header h2 {
+  margin: 0;
+  font-size: 1.6em;
+  color: light-dark(var(--light-primary), var(--dark-primary));
+}
+
+.modal-close-button {
+  background: none;
+  border: none;
+  font-size: 2.2em;
+  line-height: 1;
+  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  cursor: pointer;
+  padding: 0 5px;
+  box-shadow: none;
+}
+.modal-close-button:hover,
+.modal-close-button:focus {
+  color: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  background: none;
+}
+
+
+.modal-body {
+  overflow-y: auto;
+  flex-grow: 1;
+}
+
+.modal-body .input-group { /* Specific styling for input group in modal */
+    margin-bottom: 20px; /* Adjust spacing */
+}
+
+.modal-actions {
+  display: flex;
+  gap: 15px;
+  justify-content: flex-end; /* Align buttons to the right */
+  margin-top: 25px;
+}
+
+.modal-actions button {
+  padding: 10px 20px;
+}
+
+.modal-button-primary {
+  background-color: light-dark(var(--light-primary), var(--dark-primary));
+  color: light-dark(var(--light-button-text), var(--dark-button-text));
+}
+.modal-button-primary:hover {
+  background-color: light-dark(var(--light-primary-hover), var(--dark-primary-hover));
+}
+
+.modal-button-secondary {
+  background-color: light-dark(var(--light-secondary-button-bg), var(--dark-secondary-button-bg));
+  color: light-dark(var(--light-secondary-button-text), var(--dark-secondary-button-text));
+}
+.modal-button-secondary:hover {
+  background-color: light-dark(var(--light-secondary-button-hover-bg), var(--dark-secondary-button-hover-bg));
+}
+
+
+#savedDecksList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#savedDecksList li {
+  background-color: light-dark(var(--light-bg), var(--dark-card-bg));
+  padding: 15px 20px;
+  margin-bottom: 12px;
+  border-radius: 8px;
+  border: 1px solid light-dark(var(--light-border), var(--dark-border));
+  display: flex;
+  flex-direction: column; /* Stack info and buttons vertically */
+  gap: 10px;
+}
+
+#savedDecksList .deck-info strong {
+  color: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  font-size: 1.1em;
+}
+#savedDecksList .deck-info span {
+  font-size: 0.9em;
+  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  display: block; /* Each piece of info on a new line */
+  margin-top: 3px;
+}
+
+#savedDecksList .deck-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 5px; /* Space between info and buttons */
+}
+
+#savedDecksList .deck-actions button {
+  padding: 8px 15px;
+  font-size: 0.9em;
+  flex-grow: 1; /* Make buttons take available space */
+}
+
+#savedDecksList .deck-actions .load-deck-button {
+  background-color: light-dark(var(--light-primary), var(--dark-primary));
+  color: light-dark(var(--light-button-text), var(--dark-button-text));
+}
+#savedDecksList .deck-actions .load-deck-button:hover {
+  background-color: light-dark(var(--light-primary-hover), var(--dark-primary-hover));
+}
+
+#savedDecksList .deck-actions .delete-deck-button {
+  background-color: light-dark(var(--light-error), var(--dark-error));
+  color: light-dark(var(--light-button-text), var(--light-button-text));
+}
+#savedDecksList .deck-actions .delete-deck-button:hover {
+  background-color: light-dark(rgba(217, 48, 37, 0.8), rgba(242, 139, 130, 0.8));
+}
+
+/* Quiz Mode Styles */
+#quizModeContainer {
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid light-dark(var(--light-border), var(--dark-border));
+  border-radius: 8px;
+  background-color: light-dark(var(--light-surface), var(--dark-surface)); /* Match app container surface */
+}
+
+#quizModeContainer h2 {
+  color: light-dark(var(--light-primary), var(--dark-primary));
+  margin-bottom: 20px;
+  font-size: 1.8em;
+}
+
+#quizPreparationMessage {
+  font-style: italic;
+  margin-bottom: 20px;
+}
+
+.quiz-progress-indicator {
+  font-size: 0.95em;
+  color: light-dark(var(--light-text-secondary), var(--dark-text-secondary));
+  margin-bottom: 15px;
+  text-align: left;
+}
+
+.quiz-term-display {
+  font-size: 1.5em;
+  font-weight: 500;
+  color: light-dark(var(--light-text-primary), var(--dark-text-primary));
+  background-color: light-dark(var(--light-bg), var(--dark-card-bg));
+  padding: 20px;
+  border-radius: 8px;
+  margin-bottom: 25px;
+  text-align: center;
+  min-height: 60px; /* Ensure some height even for short terms */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.quiz-options-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.quiz-option-button {
+  background-color: light-dark(var(--light-secondary-button-bg), var(--dark-secondary-button-bg));
+  color: light-dark(var(--light-secondary-button-text), var(--dark-secondary-button-text));
+  border: 1px solid light-dark(var(--light-border), var(--dark-border));
+  padding: 15px;
+  text-align: left;
+  font-size: 1em;
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+}
+
+.quiz-option-button:hover:not(:disabled) {
+  background-color: light-dark(var(--light-secondary-button-hover-bg), var(--dark-secondary-button-hover-bg));
+  border-color: light-dark(var(--light-primary), var(--dark-primary));
+}
+
+.quiz-option-button.selected {
+  border-color: light-dark(var(--light-primary), var(--dark-primary));
+  box-shadow: 0 0 0 2px light-dark(var(--light-focus-shadow-color), var(--dark-focus-shadow-color));
+}
+
+.quiz-option-button.correct {
+  background-color: light-dark(var(--light-success), var(--dark-success)) !important;
+  color: light-dark(var(--light-button-text), var(--dark-text-primary)) !important;
+  border-color: light-dark(var(--light-success), var(--dark-success)) !important;
+}
+
+.quiz-option-button.incorrect {
+  background-color: light-dark(var(--light-error), var(--dark-error)) !important;
+  color: light-dark(var(--light-button-text), var(--dark-text-primary)) !important;
+  border-color: light-dark(var(--light-error), var(--dark-error)) !important;
+}
+
+.quiz-option-button:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+
+.quiz-feedback-message {
+  margin-top: 15px;
+  margin-bottom: 20px;
+  font-weight: 500;
+  min-height: 1.2em;
+  font-size: 1.1em;
+}
+
+.quiz-feedback-message.correct {
+  color: light-dark(var(--light-success), var(--dark-success));
+}
+
+.quiz-feedback-message.incorrect {
+  color: light-dark(var(--light-error), var(--dark-error));
+}
+
+.quiz-controls-area {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.quiz-summary-results {
+  margin-top: 20px;
+  padding: 25px;
+  background-color: light-dark(var(--light-bg), var(--dark-card-bg));
+  border-radius: 8px;
+}
+
+.quiz-summary-results h3 {
+  color: light-dark(var(--light-primary), var(--dark-primary));
+  margin-bottom: 15px;
+  font-size: 1.6em;
+}
+
+#quizFinalScore {
+  font-size: 1.2em;
+  margin-bottom: 25px;
+  line-height: 1.6; /* Ensure multiline grade info displays well */
+}
+
+.quiz-summary-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
